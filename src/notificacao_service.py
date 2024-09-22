@@ -12,16 +12,29 @@ class NotificacaoService():
     def enviar_notificacao(self, agendamento: dict) -> bool:
         self.logger.info(f'Iniciando fluxo notificacao {agendamento}')
         to_emails = [agendamento["email_para_envio"]]
-        subject = f"Agendamento {agendamento['id']}"
+        subject = "Health&Med - Nova consulta agendada"
 
         if agendamento["status_agendamento"] == "Confirmado":
-            body_html = f"""
+            if(agendamento["para_email_medico"]):
+                body_html = f"""
+                        <html>
+                            <body>
+                                <h1>Olá, Dr. {agendamento["nome_medico"]}</h1>
+                                <p></p>
+                                <p>Paciente: {agendamento["nome_paciente"]}</p> 
+                                <p>Data e horário: {self.__format_time(agendamento["horario"])}</p> 
+                            </body>
+                        </html>
+                        """
+            else:
+                body_html = f"""
                     <html>
                         <body>
-                            <h1>Agendamento realizado com sucesso</h1>
-                            <p>Horário Agendamento: {self.__format_time(agendamento["horario"])}</p> 
-                            <p>CRM Médico: {agendamento["crm_medico"]}</p> 
-                            <p>Paciente: {agendamento["nome_paciente"]}</p> 
+                            <h1>Olá, {agendamento["nome_paciente"]}</h1>
+                            <p></p>
+                            <p>Você tem uma nova consulta marcada! </p>
+                            <p>Médico: {agendamento["nome_medico"]}</p> 
+                            <p>Data e horário: {self.__format_time(agendamento["horario"])}</p> 
                         </body>
                     </html>
                     """
@@ -46,6 +59,6 @@ class NotificacaoService():
 
     def __format_time(self, time_string):
         dt = datetime.strptime(time_string, "%Y-%m-%dT%H:%M")
-        formatted_time = dt.strftime("%d/%m/%Y %H:%M")
+        formatted_time = f'{dt.strftime("%d/%m/%Y")} às {dt.strftime("%H:%M")}'
         
         return formatted_time
