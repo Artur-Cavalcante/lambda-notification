@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from aws_lambda_powertools import Logger
 
 from src.services.email_service import EmailService
@@ -18,7 +19,7 @@ class NotificacaoService():
                     <html>
                         <body>
                             <h1>Agendamento realizado com sucesso</h1>
-                            <p>Horário Agendamento: {agendamento["horario"]}</p> 
+                            <p>Horário Agendamento: {self.__format_time(agendamento["horario"])}</p> 
                             <p>CRM Médico: {agendamento["crm_medico"]}</p> 
                             <p>Paciente: {agendamento["nome_paciente"]}</p> 
                         </body>
@@ -31,7 +32,7 @@ class NotificacaoService():
                     <body>
                         <h1>Agendamento Rejeitado.</h1>
                         <p>Não foi possível realizar o agendamento, horário não disponível.</p>
-                        <p>Horário Agendamento: {agendamento["horario"]}</p> 
+                        <p>Horário Agendamento: {self.__format_time(agendamento["horario"])}</p> 
                         <p>CRM Médico: {agendamento["crm_medico"]}</p> 
                         <p>Paciente: {agendamento["nome_paciente"]}</p> 
                     </body>
@@ -41,3 +42,10 @@ class NotificacaoService():
         self.logger.info(f'Iniciando envio do email {agendamento}')
         self.email_service.enviar_email(to_emails, subject, body_html)
         self.logger.info(f'Finalizado envio do email {agendamento}')
+
+
+    def __format_time(time_string):
+        dt = datetime.strptime(time_string, "%Y-%m-%dT%H:%M")
+        formatted_time = dt.strftime("%d/%m/%Y %H:%M")
+        
+        return formatted_time
