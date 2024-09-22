@@ -21,6 +21,7 @@ class NotificacaoService():
                             <body>
                                 <h1>Olá, Dr. {agendamento["nome_medico"]}</h1>
                                 <p></p>
+                                <p>Você tem uma nova consulta marcada! </p>
                                 <p>Paciente: {agendamento["nome_paciente"]}</p> 
                                 <p>Data e horário: {self.__format_time(agendamento["horario"])}</p> 
                             </body>
