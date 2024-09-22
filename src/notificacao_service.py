@@ -44,7 +44,7 @@ class NotificacaoService():
         self.logger.info(f'Finalizado envio do email {agendamento}')
 
 
-    def __format_time(time_string):
+    def __format_time(self, time_string):
         dt = datetime.strptime(time_string, "%Y-%m-%dT%H:%M")
         formatted_time = dt.strftime("%d/%m/%Y %H:%M")
         
