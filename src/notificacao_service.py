@@ -2,7 +2,6 @@ import os
 from aws_lambda_powertools import Logger
 
 from src.services.email_service import EmailService
-from src.agendamento_status_enum import AgendamentoStatus
 
 class NotificacaoService():
     def __init__(self, logger: Logger) -> None:
@@ -10,11 +9,11 @@ class NotificacaoService():
         self.email_service = EmailService(self.logger)
     
     def enviar_notificacao(self, agendamento: dict) -> bool:
+        self.logger.info(f'Iniciando fluxo notificacao {agendamento}')
         to_emails = [agendamento["email_para_envio"]]
         subject = f"Agendamento {agendamento['id']}"
 
-
-        if agendamento["status_agendamento"] == int(AgendamentoStatus.Confirmado):
+        if agendamento["status_agendamento"] == "Confirmado":
             body_html = f"""
                     <html>
                         <body>
@@ -26,7 +25,7 @@ class NotificacaoService():
                     </html>
                     """
         
-        if agendamento["status_agendamento"] == int(AgendamentoStatus.Rejeitado):
+        if agendamento["status_agendamento"] == 'Rejeitado':
             body_html = f"""
                 <html>
                     <body>
@@ -38,5 +37,7 @@ class NotificacaoService():
                     </body>
                 </html>
                 """
-
+    
+        self.logger.info(f'Iniciando envio do email {agendamento}')
         self.email_service.enviar_email(to_emails, subject, body_html)
+        self.logger.info(f'Finalizado envio do email {agendamento}')
