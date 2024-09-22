@@ -14,7 +14,7 @@ class NotificacaoService():
         subject = f"Agendamento {agendamento['id']}"
 
 
-        if agendamento["status_agendamento"] ==  AgendamentoStatus.Confirmado:
+        if agendamento["status_agendamento"] == int(AgendamentoStatus.Confirmado):
             body_html = f"""
                     <html>
                         <body>
@@ -26,7 +26,7 @@ class NotificacaoService():
                     </html>
                     """
         
-        if agendamento["status_agendamento"] ==  AgendamentoStatus.Rejeitado:
+        if agendamento["status_agendamento"] == int(AgendamentoStatus.Rejeitado):
             body_html = f"""
                 <html>
                     <body>
